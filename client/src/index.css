@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* WCAG AA on the dark board: solid colors only, never opacity-dimmed text.
+   Currency chips use dark text on light chip backgrounds (>= 7:1). */
+:root {
+  --board: #141a24;
+  --panel: #1d2632;
+  --panel-raised: #273345;
+  --line: #3b4a61;
+  --ink: #f1f5fb;
+  --ink-soft: #c3cfdf;
+}
+
+body {
+  background: var(--board);
+  color: var(--ink);
+}

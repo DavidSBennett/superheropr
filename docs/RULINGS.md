@@ -21,6 +21,7 @@ was approved as recommended.
 | R13 | Approved: add reward_code column; importer maps the 4 phrases until then |
 | R14 | Approved: pr_game_cards_1.xlsx is canonical |
 | R15 | Approved: delivered CSV schema is canonical |
+| R16 | PENDING: forced pass when no legal placement exists (engine safety) |
 
 ## Gameplay rulings
 
@@ -98,6 +99,16 @@ Recommendation: one exec placed at Permits rebuilds exactly one card.
 **R12. Final tiebreak.**
 After most leftover tokens, a tie can remain.
 Recommendation: shared victory.
+
+**R16. Forced pass (added during Phase 2, needs your confirmation).**
+"You can't pass while you still have execs" can deadlock: in the slice (Permits
+and Press Room disabled) 2 players x 5 execs is 10 placements against 8
+location spaces plus however many crises are affordable; closures make it worse.
+Implemented: a PASS action the server accepts only when the player has no legal
+placement at all; the player sits out the rest of the round and their remaining
+execs return at reset. The engine rejects a pass whenever any legal placement
+exists. In the full game (unlimited Permits) this should almost never fire,
+but it keeps the engine deadlock-free.
 
 ## Data rulings
 

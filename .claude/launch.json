@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "php",
+      "runtimeArgs": ["-d", "extension=pdo_sqlite", "-S", "127.0.0.1:8010", "-t", "server"],
+      "port": 8010
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "client", "run", "dev", "--", "--port", "5178", "--strictPort"],
+      "port": 5178
+    }
+  ]
+}
