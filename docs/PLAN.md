@@ -265,7 +265,7 @@ states carried by icon + text, full keyboard play for placement.
 
 Importer (admin only): accepts pr_game_cards.xlsx (sheets crises, mandates,
 fallen_heroes) or the 5 CSVs. Validations, all fatal unless noted: exact
-header names; expected row counts (48/9/6/30/10) with override checkbox;
+header names; expected row counts (48/9/6/30/11) with override checkbox;
 ASCII-only; UTF-8 no BOM; CRLF; unique ids; enum fields (type, kind,
 devote_currency); every *_code parses against the section 4 grammar;
 rebuild_trust == ceil(weighted/2); reward_extra in the known set (R13);

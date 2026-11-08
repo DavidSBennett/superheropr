@@ -14,7 +14,7 @@ final class Validate
         'spin' => ['id','name','kind','effect_code','effect_text'],
         'locations' => ['id','name','group','spaces','action_code','action_text'],
     ];
-    public const EXPECTED_ROWS = ['crises' => 48, 'mandates' => 9, 'fallen_heroes' => 6, 'spin' => 30, 'locations' => 10];
+    public const EXPECTED_ROWS = ['crises' => 48, 'mandates' => 9, 'fallen_heroes' => 6, 'spin' => 30, 'locations' => 11];
     public const FILE_TO_KIND = ['crises' => 'crisis', 'mandates' => 'mandate', 'fallen_heroes' => 'fallen', 'spin' => 'spin', 'locations' => 'location'];
     public const TYPES = ['Financial', 'Media', 'Community', 'Political', 'Public Safety', 'Conspiracy'];
     public const WEIGHTS = ['an' => 0.5, 'in' => 1, 'gr' => 1, 'rg' => 2, 'co' => 2, 'iv' => 2];

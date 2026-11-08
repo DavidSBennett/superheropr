@@ -21,7 +21,8 @@ was approved as recommended.
 | R13 | Approved: add reward_code column; importer maps the 4 phrases until then |
 | R14 | Approved: pr_game_cards_1.xlsx is canonical |
 | R15 | Approved: delivered CSV schema is canonical |
-| R16 | PENDING: forced pass when no legal placement exists (engine safety) |
+| R16 | DECIDED: Intern Pool dump space (unlimited, 2 AN); pass kept as safeguard |
+| R17 | DECIDED: Villain track max rebalanced to 24/30/36/40 for 2/3/4/5 players |
 
 ## Gameplay rulings
 
@@ -100,15 +101,28 @@ Recommendation: one exec placed at Permits rebuilds exactly one card.
 After most leftover tokens, a tie can remain.
 Recommendation: shared victory.
 
-**R16. Forced pass (added during Phase 2, needs your confirmation).**
-"You can't pass while you still have execs" can deadlock: in the slice (Permits
-and Press Room disabled) 2 players x 5 execs is 10 placements against 8
-location spaces plus however many crises are affordable; closures make it worse.
-Implemented: a PASS action the server accepts only when the player has no legal
-placement at all; the player sits out the rest of the round and their remaining
-execs return at reset. The engine rejects a pass whenever any legal placement
-exists. In the full game (unlimited Permits) this should almost never fire,
-but it keeps the engine deadlock-free.
+**R16. No legal placement. (DECIDED 2026-11-07)**
+"You can't pass while you still have execs" could deadlock once every space was
+full and no crisis affordable. David's ruling: add a dump space. Implemented as
+the Intern Pool (L11): unlimited spaces, any number of execs, pays 2 Analysts.
+With an always-open space a placement is always legal, so the PASS action from
+the first slice build stays in the engine only as an unreachable safeguard.
+
+**R17. Villain track maxima. (DECIDED 2026-11-07 - "try and balance the villain
+track")**
+The draft maxima (12/14/16/18) are far below what 8 rounds actually produce.
+Simulation (2000 games per player count, defensive bots that firefight the
+oldest row slots): natural accumulation over 8 full rounds averages
+24.7 / 32.0 / 37.3 / 40.9 for 2/3/4/5 players, with threat from fallen crises
+the dominant source (about 70%). Under the draft maxima, 99-100% of games
+ended by Villain max around round 3.8 - the track was a doom clock, not a
+tension dial.
+New maxima: 24 / 30 / 36 / 40 (about the bot median). Result: bot games now
+average end round 7.3-7.6, 58-67% of bot games still max out (late), and the
+rest reach final scoring. Humans defend better than bots, so live rates will
+land lower; traitors (+up to 8 per game) and real Fallen Heroes arrive in
+Phase 3 and the maxima get re-tuned in the Phase 4 balance pass with the full
+rules in play.
 
 ## Data rulings
 

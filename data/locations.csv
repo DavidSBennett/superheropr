@@ -9,3 +9,4 @@ L07,Coalition Summit,SUMMIT,1,GAIN:CO1;TRADE:1,Take 1 Coalition Partner. Then yo
 L08,Field Office,FIELD,1,GAIN:IV1,Take 1 Investigator
 L09,Press Room,PRESS,3,PLAYSPIN;REASSIGN,Play 1 Spin card. At end of round this exec moves to another open space
 L10,Newswire,NEWSWIRE,1,GAIN:SPIN1;SCOUT:3,Draw 1 Spin card. Look at the top 3 crises in the deck and put them back in any order
+L11,Intern Pool,INTERNS,0,GAIN:AN2,Take 2 Analysts. Open to any number of execs

@@ -15,7 +15,9 @@ final class Engine
 {
     public const CURRENCIES = ['AN', 'IN', 'GR', 'RG', 'CO', 'IV'];
     public const EXECS_BY_COUNT = [2 => 5, 3 => 4, 4 => 3, 5 => 3];
-    public const VILLAIN_MAX = [2 => 12, 3 => 14, 4 => 16, 5 => 18];
+    // R17: rebalanced 2026-11-07 from the draft 12/14/16/18, which simulation
+    // showed ends ~99% of games by round 4. See docs/RULINGS.md.
+    public const VILLAIN_MAX = [2 => 24, 3 => 30, 4 => 36, 5 => 40];
     public const ROUNDS = 8;
     public const ROUND5_EXTRA_EXEC = 1;
     public const SLICE_DISABLED_LOCATIONS = ['L03', 'L09']; // Permits, Press Room (Phase 3)
@@ -93,6 +95,7 @@ final class Engine
                 'rebuiltLocations' => [],     // Phase 3
             ],
             'pending' => null,                // e.g. scout awaiting order
+            'stats' => ['falls' => 0, 'villain' => ['threat' => 0, 'fallout' => 0, 'fallen' => 0, 'penalty' => 0]],
             'log' => [],
             'result' => null,
             'rng' => $rng,                    // SECRET
@@ -393,10 +396,11 @@ final class Engine
         }
         foreach ($falls as $cardId) {
             $card = $cards->crisis($cardId);
+            $state['stats']['falls']++;
             self::log($state, null, "{$card['name']} fell. {$card['fallout_text']}");
             self::applyFallout($state, $cards, $card['fallout_code']);
             if ($state['phase'] === 'finished') { return; }
-            self::villainAdd($state, $cards, (int)$card['threat'], "Threat from {$card['name']}");
+            self::villainAdd($state, $cards, (int)$card['threat'], "Threat from {$card['name']}", 'threat');
             if ($state['phase'] === 'finished') { return; }
         }
         // Slide, then refill to playerCount + 2.
@@ -466,7 +470,7 @@ final class Engine
                                 self::log($state, $p['seat'], "could not pay $n $cur and loses 2 Trust.");
                             } else {
                                 self::log($state, $p['seat'], "could not pay $n $cur; the Villain track rises 1.");
-                                self::villainAdd($state, $cards, 1, 'Fallout penalty');
+                                self::villainAdd($state, $cards, 1, 'Fallout penalty', 'penalty');
                                 if ($state['phase'] === 'finished') { return; }
                             }
                         }
@@ -515,13 +519,13 @@ final class Engine
                     break;
                 }
                 case 'VILLAIN':
-                    self::villainAdd($state, $cards, (int)$parts[1], 'Fallout');
+                    self::villainAdd($state, $cards, (int)$parts[1], 'Fallout', 'fallout');
                     if ($state['phase'] === 'finished') { return; }
                     break;
                 case 'FALLEN':
                     // Slice behavior: no Fallen Heroes yet; +2 Villain per turn instead.
                     self::log($state, null, 'A hero turns... (Fallen Heroes arrive in Phase 3; the Villain track rises 2 instead.)');
-                    self::villainAdd($state, $cards, 2 * (int)$parts[1], 'Hero turned');
+                    self::villainAdd($state, $cards, 2 * (int)$parts[1], 'Hero turned', 'fallen');
                     if ($state['phase'] === 'finished') { return; }
                     break;
                 case 'CLOSE': {
@@ -539,9 +543,10 @@ final class Engine
         }
     }
 
-    private static function villainAdd(array &$state, CardSet $cards, int $n, string $why): void
+    private static function villainAdd(array &$state, CardSet $cards, int $n, string $why, string $src = 'fallout'): void
     {
         if ($n <= 0) { return; }
+        $state['stats']['villain'][$src] += $n;
         $v = &$state['villain'];
         $v['track'] = min($v['max'], $v['track'] + $n);
         self::log($state, null, "Villain track rises $n to {$v['track']}/{$v['max']} ($why).");

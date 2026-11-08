@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/../engine/Engine.php';
 require_once __DIR__ . '/../engine/Validate.php';
+require_once __DIR__ . '/Bot.php';
 
 $games = (int)($argv[1] ?? 50);
 $players = (int)($argv[2] ?? 2);
@@ -31,68 +32,6 @@ function invariants(array $state, CardSet $cards): void
     foreach ($state['crisisRow'] as $slot) { $cards->crisis($slot['cardId']); }
 }
 
-/** Deterministic simple bot. Returns an action for the seat to act. */
-function botAction(array $state, CardSet $cards, int $seat, array &$botRng): array
-{
-    if ($state['pending'] !== null) {
-        $k = $state['pending']['count'];
-        $order = range(0, $k - 1);
-        return ['type' => 'SCOUT_ORDER', 'order' => Rng::shuffle($botRng, $order)];
-    }
-    $p = $state['players'][$seat];
-    // Resolve the highest-trust affordable crisis.
-    $best = null;
-    foreach ($state['crisisRow'] as $slot) {
-        $ok = true;
-        foreach ($cards->crisisCost($slot['cardId']) as $cur => $n) {
-            if ($p['tokens'][$cur] < $n) { $ok = false; break; }
-        }
-        if ($ok) {
-            $t = (int)$cards->crisis($slot['cardId'])['trust'];
-            if ($best === null || $t > $best[1]) { $best = [$slot['cardId'], $t]; }
-        }
-    }
-    if ($best !== null) {
-        $devote = count($p['devoted']) < 2 && Rng::int($botRng, 3) === 0;
-        return ['type' => 'PLACE', 'spot' => $best[0], 'devote' => $devote];
-    }
-    // Otherwise the open location granting the currency we are most short of
-    // for the cheapest crisis; fall back to any open location.
-    $open = [];
-    foreach ($cards->locations as $id => $loc) {
-        if (in_array($id, Engine::SLICE_DISABLED_LOCATIONS, true)) { continue; }
-        if (in_array($id, $state['board']['closedThisRound'], true)) { continue; }
-        $spaces = (int)$loc['spaces'];
-        if ($spaces === 0 || count($state['board']['occupancy'][$id] ?? []) < $spaces) { $open[] = $id; }
-    }
-    if (!$open) {
-        return ['type' => 'PASS'];
-    }
-    $pref = ['AN' => 'L05', 'IN' => 'L04', 'GR' => 'L06', 'RG' => 'L01', 'CO' => 'L07', 'IV' => 'L08'];
-    $need = null;
-    $needGap = -1;
-    foreach ($state['crisisRow'] as $slot) {
-        foreach ($cards->crisisCost($slot['cardId']) as $cur => $n) {
-            $gap = $n - $p['tokens'][$cur];
-            if ($gap > 0 && $gap > $needGap && in_array($pref[$cur], $open, true)) {
-                $need = $pref[$cur];
-                $needGap = $gap;
-            }
-        }
-    }
-    $spot = $need ?? $open[Rng::int($botRng, count($open))];
-    $action = ['type' => 'PLACE', 'spot' => $spot];
-    if ($spot === 'L07') {
-        foreach (Engine::CURRENCIES as $cur) {
-            if ($cur !== 'IV' && $p['tokens'][$cur] >= 4) {
-                $action['trade'] = ['give' => $cur, 'get' => 'IV'];
-                break;
-            }
-        }
-    }
-    return $action;
-}
-
 $causes = ['round8' => 0, 'villainmax' => 0];
 $passes = 0;
 $villainSum = 0;
@@ -109,7 +48,7 @@ for ($g = 0; $g < $games; $g++) {
     while ($state['phase'] !== 'finished') {
         if (++$steps > 2000) { throw new RuntimeException("game $seed did not terminate"); }
         $seat = $state['pending']['seat'] ?? $state['activeSeat'];
-        $action = botAction($state, $cards, $seat, $botRng);
+        $action = Bot::action(Rng::int($botRng, 2) ? 'defensive' : 'greedy', $state, $cards, $seat, $botRng);
         $res = Engine::applyAction($state, $cards, $seat, $action);
         if (!$res['ok']) {
             throw new RuntimeException("game $seed step $steps: bot made illegal move {$res['error']} " . json_encode($action));
