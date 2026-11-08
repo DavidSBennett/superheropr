@@ -9,6 +9,7 @@ export default function Lobby({ onOpenGame }) {
   const toast = useToast();
   const [games, setGames] = useState([]);
   const [playerCount, setPlayerCount] = useState(2);
+  const [bots, setBots] = useState(0);
   const [joinCode, setJoinCode] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -22,7 +23,7 @@ export default function Lobby({ onOpenGame }) {
   const createGame = async () => {
     setBusy(true);
     try {
-      const r = await post('games_create.php', { playerCount });
+      const r = await post('games_create.php', { playerCount, bots: Math.min(bots, playerCount - 1) });
       onOpenGame(r.gameId);
     } catch (e) {
       toast(e.message);
@@ -58,12 +59,15 @@ export default function Lobby({ onOpenGame }) {
       <section className="mb-6 grid gap-4 sm:grid-cols-2">
         <div className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-4">
           <h2 className="mb-2 font-bold">New game</h2>
-          <label className="mb-3 block text-sm">
+          <label className="mb-2 block text-sm">
             Players{' '}
             <select
               className="ml-2 rounded bg-[var(--panel-raised)] p-1"
               value={playerCount}
-              onChange={(e) => setPlayerCount(+e.target.value)}
+              onChange={(e) => {
+                setPlayerCount(+e.target.value);
+                setBots(Math.min(bots, +e.target.value - 1));
+              }}
             >
               {[2, 3, 4, 5].map((n) => (
                 <option key={n} value={n}>
@@ -72,11 +76,26 @@ export default function Lobby({ onOpenGame }) {
               ))}
             </select>
           </label>
+          <label className="mb-3 block text-sm">
+            Bot opponents{' '}
+            <select
+              className="ml-2 rounded bg-[var(--panel-raised)] p-1"
+              value={bots}
+              onChange={(e) => setBots(+e.target.value)}
+            >
+              {Array.from({ length: playerCount }, (_, i) => (
+                <option key={i} value={i}>
+                  {i}
+                </option>
+              ))}
+            </select>
+          </label>
           <Button onClick={createGame} disabled={busy}>
             Create game
           </Button>
           <p className="mt-2 text-xs text-[var(--ink-soft)]">
-            Full rules, 2-5 players.
+            Full rules, 2-5 firms. Bots fill their seats at once: pick{' '}
+            {playerCount - 1} bots for a solo game.
           </p>
         </div>
         <div className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-4">

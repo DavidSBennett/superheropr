@@ -3,6 +3,7 @@
 // Optimistic concurrency: the UPDATE is guarded by state_version; a stale
 // client gets 409 with the fresh state. The action log is append-only.
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/botturns.php';
 
 $u = require_user();
 $in = json_in();
@@ -55,7 +56,15 @@ try {
         ->execute([$gameId, $newVersion, (int)$u['id'], json_encode($action, JSON_UNESCAPED_SLASHES), $newVersion, now()]);
     $pdo->commit();
 
-    $out = ['version' => $newVersion, 'state' => Engine::filterForViewer($newState, $seat)];
+    // Solo play: let any bots take their turns, then answer with the result.
+    advance_bots($gameId);
+    $st = $pdo->prepare('SELECT state, state_version FROM prg_games WHERE id = ?');
+    $st->execute([$gameId]);
+    $fresh = $st->fetch();
+    $out = [
+        'version' => (int)$fresh['state_version'],
+        'state' => Engine::filterForViewer(json_decode($fresh['state'], true), $seat),
+    ];
     if (isset($res['private'])) { $out['private'] = $res['private']; }
     json_out($out);
 } catch (Throwable $e) {

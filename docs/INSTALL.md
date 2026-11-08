@@ -15,9 +15,17 @@ public_html/superheropr/data/      the 5 card CSVs (for re-imports)
 
 1. cPanel > MySQL Databases: create a database (e.g. USER_superheropr) and a
    DB user with a strong password; grant the user ALL PRIVILEGES on it.
-2. cPanel > phpMyAdmin: select that database, Import (or SQL tab) and run
-   server/migrations/001_init.sql from the repo.
+2. cPanel > phpMyAdmin: select that database and run every file in
+   server/migrations/ in order (001_init.sql, 002_passwords_and_bots.sql, ...).
 3. Check PHP version (cPanel > Select PHP Version): 8.1 or newer.
+
+## 0b. Upgrading an existing install
+
+When a delivery note names a new migration, run just that file in phpMyAdmin
+after deploying. For 002 specifically: sign in at the app IMMEDIATELY after
+deploying, as your admin username, with the password you want - the first
+password login on a pre-existing account claims it, so claim yours before
+anyone else can.
 
 ## A. Recommended: deploy from GitHub through cPanel
 
@@ -57,8 +65,11 @@ Every later delivery:
 
 ## C. Card import (first install, and whenever the data changes)
 
-1. Open https://YOURDOMAIN/superheropr/ and log in with the username you put
-   in 'admins' (the placeholder sign-in accepts any name and creates it).
+1. Open the app and log in with the username you put in 'admins'. Sign-in
+   takes a username and password; an unknown username is created on the spot
+   with that password, a known one must match its password. Being in 'admins'
+   only unlocks the importer for that account - the password is what protects
+   it.
 2. Visit https://YOURDOMAIN/superheropr/api/admin_import.php, choose the five
    CSVs from data/ (crises, mandates, fallen_heroes, spin, locations), give
    the set a version label (e.g. 2026-11-07-a) and submit.
@@ -73,9 +84,14 @@ play a round. The "Your Games" list on the lobby shows whose turn it is.
 
 ## Notes
 
-- The sign-in is still the placeholder shim. When you send The Historians
-  source, it gets replaced by the real AuthContext/RequireAuth and the shim
-  table goes away; that swap will come with its own migration note.
+- Solo play: when creating a game, pick 1-4 bot opponents; they fill their
+  seats instantly and take their turns on the server inside your own
+  requests (no cron needed). Pick playerCount-1 bots for a fully solo game.
+- The sign-in is still the placeholder shim, now password-backed
+  (password_hash/password_verify, session cookie httponly+samesite). When you
+  send The Historians source, it gets replaced by the real
+  AuthContext/RequireAuth and the shim table goes away; that swap will come
+  with its own migration note.
 - client/dist/ is committed to the repo on purpose: cPanel's deploy has no
   Node, so I build the client here and ship the output with each delivery.
 - Local development on your machine needs no MySQL:

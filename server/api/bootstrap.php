@@ -10,6 +10,12 @@ require_once __DIR__ . '/../engine/Engine.php';
 require_once __DIR__ . '/../engine/Validate.php';
 
 session_name('prgsid');
+session_set_cookie_params([
+    'httponly' => true,
+    'samesite' => 'Lax',
+    'secure' => !empty($_SERVER['HTTPS']),
+    'path' => '/',
+]);
 session_start();
 
 function cfg(): array
@@ -41,12 +47,24 @@ function db(): PDO
 function ensure_sqlite_schema(PDO $pdo): void
 {
     $has = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='prg_games'")->fetch();
-    if ($has) { return; }
+    if ($has) {
+        // Dev-convenience upgrades, mirroring migrations 002+.
+        $cols = array_column($pdo->query('PRAGMA table_info(prg_shim_users)')->fetchAll(), 'name');
+        if (!in_array('pass_hash', $cols, true)) {
+            $pdo->exec("ALTER TABLE prg_shim_users ADD COLUMN pass_hash TEXT NOT NULL DEFAULT ''");
+        }
+        $cols = array_column($pdo->query('PRAGMA table_info(prg_game_players)')->fetchAll(), 'name');
+        if (!in_array('is_bot', $cols, true)) {
+            $pdo->exec('ALTER TABLE prg_game_players ADD COLUMN is_bot INTEGER NOT NULL DEFAULT 0');
+        }
+        return;
+    }
     $pdo->exec(<<<SQL
 CREATE TABLE prg_shim_users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT NOT NULL UNIQUE,
   display_name TEXT NOT NULL,
+  pass_hash TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL
 );
 CREATE TABLE prg_card_sets (
@@ -84,6 +102,7 @@ CREATE TABLE prg_game_players (
   game_id INTEGER NOT NULL REFERENCES prg_games(id),
   seat INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
+  is_bot INTEGER NOT NULL DEFAULT 0,
   UNIQUE (game_id, seat),
   UNIQUE (game_id, user_id)
 );

@@ -16,8 +16,8 @@ export function AuthProvider({ children }) {
       .finally(() => setReady(true));
   }, []);
 
-  const login = async (username, displayName) => {
-    const r = await post('auth_login.php', { username, displayName });
+  const login = async (username, password, displayName) => {
+    const r = await post('auth_login.php', { username, password, displayName });
     setUser(r.user);
   };
   const logout = async () => {

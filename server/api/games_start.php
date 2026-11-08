@@ -1,6 +1,7 @@
 <?php
 // POST {gameId} -> {version}. Creator only, once all seats are filled.
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/botturns.php';
 
 $u = require_user();
 $in = json_in();
@@ -29,6 +30,7 @@ try {
     $pdo->prepare('UPDATE prg_games SET status=\'active\', state_version=1, state=?, turn_user_id=?, updated_at=? WHERE id=?')
         ->execute([json_encode($state, JSON_UNESCAPED_SLASHES), waiting_on($state), now(), $gameId]);
     $pdo->commit();
+    advance_bots($gameId); // a bot may hold the first player marker
     json_out(['version' => 1]);
 } catch (Throwable $e) {
     $pdo->rollBack();

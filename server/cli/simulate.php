@@ -6,7 +6,7 @@
 //   php simulate.php --players=2 --games=500 --csv=out.csv
 require_once __DIR__ . '/../engine/Engine.php';
 require_once __DIR__ . '/../engine/Validate.php';
-require_once __DIR__ . '/Bot.php';
+require_once __DIR__ . '/../engine/Bot.php';
 
 $opt = getopt('', ['players:', 'games:', 'seed:', 'vmax:', 'compdiv:', 'bots:', 'csv:', 'quiet']);
 $players = (int)($opt['players'] ?? 2);

@@ -5,7 +5,7 @@
 
 require_once __DIR__ . '/../engine/Engine.php';
 require_once __DIR__ . '/../engine/Validate.php';
-require_once __DIR__ . '/Bot.php';
+require_once __DIR__ . '/../engine/Bot.php';
 
 $games = (int)($argv[1] ?? 50);
 $players = (int)($argv[2] ?? 2);
