@@ -1,0 +1,2 @@
+# The engine is library code included by api/*.php; it never serves requests.
+Require all denied

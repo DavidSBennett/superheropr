@@ -27,12 +27,13 @@ $rows = [];
 $agg = [
     'villainmax' => 0, 'round8' => 0, 'traitorWins' => 0, 'traitorPointWins' => 0, 'endRoundSum' => 0, 'villainSum' => 0,
     'fallsSum' => 0, 'src' => ['threat' => 0, 'fallout' => 0, 'fallen' => 0, 'penalty' => 0, 'spin' => 0, 'tipoff' => 0],
-    'winScoreSum' => 0, 'firstWins' => 0, 'winnersN' => 0,
+    'winScoreSum' => 0, 'posWins' => array_fill(0, $players, 0),
 ];
 
 for ($g = 0; $g < $games; $g++) {
     $seed = $baseSeed + $g;
     $state = Engine::newGame($cards, range(101, 100 + $players), $seed);
+    $firstSeat = $state['firstPlayerSeat'];
     if ($vmax !== null) { $state['villain']['max'] = $vmax; }
     if (isset($opt['compdiv'])) { $state['compromisedDivisor'] = (int)$opt['compdiv']; }
     $botRng = Rng::seedState($seed ^ 0x5EED);
@@ -60,6 +61,9 @@ for ($g = 0; $g < $games; $g++) {
     foreach ($state['stats']['villain'] as $k => $v) { $agg['src'][$k] += $v; }
     $winScore = max(array_column($r['scores'], 'total'));
     $agg['winScoreSum'] += $winScore;
+    foreach ($r['winners'] as $w) {
+        $agg['posWins'][($w - $firstSeat + $players) % $players]++;
+    }
     $rows[] = [
         $seed, $players, $state['villain']['max'], $r['cause'], $state['round'],
         $state['villain']['track'], $state['stats']['falls'], $winScore,
@@ -85,3 +89,8 @@ printf(
     ($agg['src']['spin'] ?? 0) / $games, ($agg['src']['tipoff'] ?? 0) / $games,
     $agg['winScoreSum'] / $games
 );
+printf("  wins by turn-order position (first player = P1): %s\n",
+    implode('  ', array_map(
+        fn($i, $w) => sprintf('P%d %.0f%%', $i + 1, 100 * $w / max(1, $games)),
+        array_keys($agg['posWins']), $agg['posWins']
+    )));

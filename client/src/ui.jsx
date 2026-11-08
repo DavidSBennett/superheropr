@@ -46,7 +46,7 @@ export function Button({ children, kind = 'primary', className = '', ...props })
   };
   return (
     <button
-      className={`rounded px-3 py-1.5 text-sm font-semibold disabled:cursor-not-allowed disabled:bg-slate-600 disabled:text-slate-300 ${kinds[kind]} ${className}`}
+      className={`rounded px-3 py-1.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300 disabled:cursor-not-allowed disabled:bg-slate-600 disabled:text-slate-300 ${kinds[kind]} ${className}`}
       {...props}
     >
       {children}
@@ -61,6 +61,7 @@ export function Dialog({ title, children, onClose }) {
         className="w-full max-w-md rounded-lg border border-[var(--line)] bg-[var(--panel)] p-4 shadow-xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
+        aria-modal="true"
         aria-label={title}
       >
         <h2 className="mb-3 text-lg font-bold">{title}</h2>

@@ -1,0 +1,14 @@
+---
+# GreenGeeks / cPanel git deployment. On "Deploy HEAD Commit" (or a pull with
+# automatic deploy), cPanel runs these tasks as your account user. The target
+# folder is public_html/superheropr; change DEPLOY below to move it.
+# Server-only files (api/config.local.php, uploaded card sets in the DB) are
+# never touched: these tasks only copy repo files over, they delete nothing.
+deployment:
+  tasks:
+    - export DEPLOY="$HOME/public_html/superheropr"
+    - /bin/mkdir -p "$DEPLOY/api" "$DEPLOY/engine" "$DEPLOY/data"
+    - /bin/cp -R client/dist/. "$DEPLOY/"
+    - /bin/cp -R server/api/. "$DEPLOY/api/"
+    - /bin/cp -R server/engine/. "$DEPLOY/engine/"
+    - /bin/cp data/*.csv "$DEPLOY/data/"

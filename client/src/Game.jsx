@@ -124,13 +124,16 @@ function VillainTrack({ villain }) {
   );
 }
 
-function CrisisCard({ card, slot, cost, affordable, clickable, onPick }) {
+function CrisisCard({ card, slot, cost, rebuildCost, affordable, clickable, onPick }) {
   const oldest = slot.pos <= 1;
+  const rebuildStr = Object.entries(rebuildCost)
+    .map(([c, n]) => `${n} ${c}`)
+    .join(' + ');
   return (
     <button
       disabled={!clickable || !affordable}
       onClick={() => onPick(card.id)}
-      title={`Fallout if it falls: ${card.fallout_text}`}
+      title={`Fallout if it falls: ${card.fallout_text}\nDevote: +1 ${card.devote_currency} each round.\nRebuilds into ${card.back_name} for ${rebuildStr} (+${card.rebuild_trust} Trust): ${card.action_text}.`}
       className={`flex w-52 shrink-0 flex-col gap-1 rounded-lg border p-2 text-left ${
         oldest ? 'border-orange-400' : 'border-[var(--line)]'
       } bg-[var(--panel)] ${clickable && affordable ? 'cursor-pointer hover:bg-[var(--panel-raised)]' : ''}`}
@@ -457,6 +460,7 @@ export default function Game({ gameId, onExit }) {
 
       {st.phase !== 'finished' && (
         <div
+          aria-live="polite"
           className={`mb-4 flex flex-wrap items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold ${
             myTurn ? 'bg-emerald-600 text-white' : 'bg-[var(--panel)]'
           }`}
@@ -554,6 +558,7 @@ export default function Game({ gameId, onExit }) {
               card={cards.crises[slot.cardId]}
               slot={slot}
               cost={crisisCostOf(cards.crises[slot.cardId])}
+              rebuildCost={costFrom(cards.crises[slot.cardId], 'rebuild_')}
               affordable={canAfford(me.tokens, crisisCostOf(cards.crises[slot.cardId]))}
               clickable={placementTurn}
               onPick={pickSpot}
@@ -638,9 +643,14 @@ export default function Game({ gameId, onExit }) {
             Pay <CostChips cost={crisisCostOf(cards.crises[dlg.cardId])} /> and score{' '}
             <b>{cards.crises[dlg.cardId].trust} Trust</b>.
           </p>
-          <p className="mb-4 text-sm text-[var(--ink-soft)]">
+          <p className="mb-2 text-sm text-[var(--ink-soft)]">
             Decide now (R3): devote it for +1 {cards.crises[dlg.cardId].devote_currency} every round, or file it to
             rebuild later at Permits.
+          </p>
+          <p className="mb-4 text-sm text-[var(--ink-soft)]">
+            If rebuilt: <b>{cards.crises[dlg.cardId].back_name}</b> for{' '}
+            <CostChips cost={costFrom(cards.crises[dlg.cardId], 'rebuild_')} /> (+
+            {cards.crises[dlg.cardId].rebuild_trust} Trust) - {cards.crises[dlg.cardId].action_text}.
           </p>
           <div className="flex gap-2">
             <Button

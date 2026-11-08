@@ -1,5 +1,6 @@
+# client/dist IS committed: cPanel's git deploy has no Node, so the built
+# client ships in the repo (rebuilt and committed with each delivery).
 node_modules/
-client/dist/
 vendor/
 server/api/config.local.php
 server/*.sqlite
