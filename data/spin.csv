@@ -1,0 +1,31 @@
+id,name,kind,effect_code,effect_text
+SP01,Overtime Push,Utility,GAIN:AN6,Take 6 Analysts
+SP02,Viral Thread,Utility,GAIN:IN3,Take 3 Influencers
+SP03,Phone Bank,Utility,GAIN:GR3,Take 3 Grassroots
+SP04,Capitol Connections,Utility,"GAIN:RG1,AN2",Take 1 Regulatory Contact + 2 Analysts
+SP05,Summit Invitation,Utility,"GAIN:CO1,AN2",Take 1 Coalition Partner + 2 Analysts
+SP06,Background Check,Utility,"GAIN:IV1,AN2",Take 1 Investigator + 2 Analysts
+SP07,Fresh Angles,Utility,GAIN:SPIN2,Draw 2 Spin cards
+SP08,Favorable Coverage,Utility,GAIN:TRUST2,Gain 2 Trust
+SP09,Crisis Forecast,Utility,SCOUT:3;GAIN:SPIN1,Look at the top 3 crises in the deck and put them back in any order. Draw 1 Spin card
+SP10,Pro Bono Campaign,Utility,"GAIN:GR2,IN1",Take 2 Grassroots + 1 Influencer
+SP11,War Chest,Utility,"GAIN:AN4,SPIN1",Take 4 Analysts and draw 1 Spin card
+SP12,Damage Control,Utility,RECALL:1,Return one of your placed execs (not on a crisis or Fallen Hero) to your pool. Its space reopens
+SP13,Poach Analysts,Attack,STEAL:AN:2,Choose an opponent. They lose 2 Analysts and you gain what they lose
+SP14,Hijack the Narrative,Attack,STEAL:IN:1,Choose an opponent. They lose 1 Influencer and you gain what they lose
+SP15,Astroturf,Attack,STEAL:GR:1,Choose an opponent. They lose 1 Grassroots and you gain what they lose
+SP16,Audit Leak,Attack,OPPLOSE:AN:2,Each opponent loses 2 Analysts
+SP17,Smear Piece,Attack,OPPLOSE:IN:1,Each opponent loses 1 Influencer
+SP18,Counter-Protest,Attack,OPPLOSE:GR:1,Each opponent loses 1 Grassroots
+SP19,The Scoop,Attack,RICH:IN:2,The player with the most Influencers loses 2 of them (all tied players lose them)
+SP20,Hostile Takeover Rumor,Attack,RICH:AN:3,The player with the most Analysts loses 3 of them (all tied players lose them)
+SP21,Expose the Donors,Attack,TRUSTLEAD:2,The player with the most Trust loses 2 Trust (all tied players lose it)
+SP22,Jam the Switchboard,Attack,SHUTTER:COMMON,"Choose Media Industry, Business District or Neighborhoods. It is closed for the rest of this round"
+SP23,Leak to the Villains,Sabotage,GAIN:AN8;VILLAIN:1,Take 8 Analysts. The Villain track rises 1
+SP24,Dirty Money,Sabotage,"GAIN:IN2,GR2;VILLAIN:1",Take 2 Influencers + 2 Grassroots. The Villain track rises 1
+SP25,Backroom Deal,Sabotage,"GAIN:RG1,CO1;VILLAIN:1",Take 1 Regulatory Contact + 1 Coalition Partner. The Villain track rises 1
+SP26,Bury the Story,Sabotage,GAIN:TRUST3;VILLAIN:1,Gain 3 Trust. The Villain track rises 1
+SP27,Stage a Rescue,Sabotage,"GAIN:TRUST2,IN2;VILLAIN:1",Gain 2 Trust + 2 Influencers. The Villain track rises 1
+SP28,Black Bag Job,Sabotage,GAIN:IV2;VILLAIN:1,Take 2 Investigators. The Villain track rises 1
+SP29,Arms-Length Fixer,Sabotage,GAIN:CO2;VILLAIN:1,Take 2 Coalition Partners. The Villain track rises 1
+SP30,Manufactured Outrage,Sabotage,"GAIN:GR3,SPIN1;VILLAIN:1",Take 3 Grassroots and draw 1 Spin card. The Villain track rises 1

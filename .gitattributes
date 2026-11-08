@@ -1,0 +1,2 @@
+data/*.csv -text
+*.xlsx binary

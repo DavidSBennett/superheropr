@@ -1,0 +1,7 @@
+id,name,target,ongoing_code,ongoing_text,redeem_an,redeem_in,redeem_gr,redeem_rg,redeem_co,redeem_iv,trust
+FH01,The Dead Air Anchor,MEDIA,DISRUPT:MEDIA,Media Industry yields 1 Influencer instead of 2. Rebuilt locations that pay Influencers pay 1 fewer.,0,4,0,0,0,2,9
+FH02,The Gridlock,CITYHALL,DISRUPT:CITYHALL,City Hall's Liaison Desk and Mayor's Office are closed. Rebuilding at Permits costs 1 extra Regulatory Contact.,2,0,0,3,0,1,10
+FH03,The Wrecking Crew,REBUILT,DISRUPT:OWNER,Rebuilt locations pay no owner benefits.,2,0,2,0,2,0,8
+FH04,The Leak,SPIN,DISRUPT:SPIN,The Press Room is closed and Spin cards cannot be played.,0,2,0,0,0,3,8
+FH05,The Embezzler,INCOME,DISRUPT:INCOME,Each player collects devotion income from at most 2 devoted cards.,6,0,0,1,0,1,9
+FH06,The Escalator,CRISES,DISRUPT:COST,Every crisis costs 2 extra Analysts to resolve.,0,0,2,1,2,0,9

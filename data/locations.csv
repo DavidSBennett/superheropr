@@ -1,0 +1,11 @@
+id,name,group,spaces,action_code,action_text
+L01,City Hall: Liaison Desk,CITYHALL,1,GAIN:RG1,Take 1 Regulatory Contact
+L02,City Hall: Mayor's Office,CITYHALL,1,FIRSTPLAYER;GAIN:SPIN1,Take the first player marker and draw 1 Spin card
+L03,City Hall: Permits,CITYHALL,0,REBUILD,Pay the rebuild cost of one resolved crisis you hold and place it on the board as your location
+L04,Media Industry,MEDIA,1,GAIN:IN2,Take 2 Influencers
+L05,Business District,BUSINESS,1,GAIN:AN4,Take 4 Analysts
+L06,Neighborhoods,NEIGHBORHOODS,1,GAIN:GR2,Take 2 Grassroots
+L07,Coalition Summit,SUMMIT,1,GAIN:CO1;TRADE:1,Take 1 Coalition Partner. Then you may trade 2 tokens of one type for 1 of another type once
+L08,Field Office,FIELD,1,GAIN:IV1,Take 1 Investigator
+L09,Press Room,PRESS,3,PLAYSPIN;REASSIGN,Play 1 Spin card. At end of round this exec moves to another open space
+L10,Newswire,NEWSWIRE,1,GAIN:SPIN1;SCOUT:3,Draw 1 Spin card. Look at the top 3 crises in the deck and put them back in any order
