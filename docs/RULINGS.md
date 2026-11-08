@@ -22,7 +22,11 @@ was approved as recommended.
 | R14 | Approved: pr_game_cards_1.xlsx is canonical |
 | R15 | Approved: delivered CSV schema is canonical |
 | R16 | DECIDED: Intern Pool dump space (unlimited, 2 AN); pass kept as safeguard |
-| R17 | DECIDED: Villain track max rebalanced to 24/30/36/40 for 2/3/4/5 players |
+| R17 | DECIDED: Villain track max rebalanced (superseded for 3-5p by R21) |
+| R18 | Implemented: a Press Room exec cannot be reassigned back to the Press Room |
+| R19 | Implemented: The Embezzler income cap pays the two oldest devoted cards |
+| R20 | APPLIED, veto-able: Compromised bonus is +1 Trust per 3 full Villain steps |
+| R21 | APPLIED, veto-able: Villain maxima 24/34/44/48 for 2/3/4/5 players |
 
 ## Gameplay rulings
 
@@ -123,6 +127,38 @@ rest reach final scoring. Humans defend better than bots, so live rates will
 land lower; traitors (+up to 8 per game) and real Fallen Heroes arrive in
 Phase 3 and the maxima get re-tuned in the Phase 4 balance pass with the full
 rules in play.
+
+**R18. Press Room reassignment target. (implemented in Phase 3)**
+The doc says the exec "moves to another open space": the Press Room itself is
+not a legal destination. Everything else open is, including crises, Fallen
+Heroes and rebuilt locations, under normal placement rules (R1).
+
+**R19. The Embezzler's income cap. (implemented in Phase 3)**
+"Each player collects devotion income from at most 2 devoted cards" does not
+say which two. Implemented deterministically as the two oldest devoted cards
+(play order). Alternative would be player choice, which adds an input round to
+the income step; flag if you want that instead.
+
+**R20. Compromised end-game bonus. (APPLIED 2026-11-07 under the balance
+mandate - veto and I will revert)**
+"+1 Trust per Villain track step" was written when the track maxed at 12-18.
+With R17/R21 maxima (24-48), simulation showed a surviving traitor collecting
++30 to +44 Trust and winning essentially every game that reached round 8 -
+traitor total win rate at 4-5p was 97-100% however the caps were set. Applied:
++1 Trust per 3 FULL Villain track steps (engine COMPROMISED_TRUST_DIVISOR = 3;
+mandates.csv text updated). That lands the traitor bonus at +10 to +16,
+comparable to the loyal mandates' typical +9 to +15, while the real traitor
+payoff stays the shared win on a maxed track. NOTE: pr_game_cards.xlsx still
+carries the old wording on its mandates sheet; the CSV is canonical (R15).
+
+**R21. Villain maxima, Phase 3 revision. (APPLIED 2026-11-07 - veto-able)**
+Full rules add traitor tip-offs (~5 per game at 3p, ~10 at 4-5p with two
+traitors in my simulations, which tip at every opportunity) and real Fallen
+Heroes. The R17 maxima were calibrated without those. New maxima:
+24 / 34 / 44 / 48. Bot games then end villainmax 62/72/79/81% by player count
+with max-aggression traitor bots and no social deduction; live humans tip less
+and defend more, so expect meaningfully lower live rates. Re-tune in Phase 4
+against the full balance report and real play.
 
 ## Data rulings
 

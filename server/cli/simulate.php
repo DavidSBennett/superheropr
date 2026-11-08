@@ -8,7 +8,7 @@ require_once __DIR__ . '/../engine/Engine.php';
 require_once __DIR__ . '/../engine/Validate.php';
 require_once __DIR__ . '/Bot.php';
 
-$opt = getopt('', ['players:', 'games:', 'seed:', 'vmax:', 'bots:', 'csv:', 'quiet']);
+$opt = getopt('', ['players:', 'games:', 'seed:', 'vmax:', 'compdiv:', 'bots:', 'csv:', 'quiet']);
 $players = (int)($opt['players'] ?? 2);
 $games = (int)($opt['games'] ?? 1000);
 $baseSeed = (int)($opt['seed'] ?? 1);
@@ -25,8 +25,8 @@ if ($cards === null) {
 
 $rows = [];
 $agg = [
-    'villainmax' => 0, 'round8' => 0, 'endRoundSum' => 0, 'villainSum' => 0,
-    'fallsSum' => 0, 'src' => ['threat' => 0, 'fallout' => 0, 'fallen' => 0, 'penalty' => 0],
+    'villainmax' => 0, 'round8' => 0, 'traitorWins' => 0, 'traitorPointWins' => 0, 'endRoundSum' => 0, 'villainSum' => 0,
+    'fallsSum' => 0, 'src' => ['threat' => 0, 'fallout' => 0, 'fallen' => 0, 'penalty' => 0, 'spin' => 0, 'tipoff' => 0],
     'winScoreSum' => 0, 'firstWins' => 0, 'winnersN' => 0,
 ];
 
@@ -34,6 +34,7 @@ for ($g = 0; $g < $games; $g++) {
     $seed = $baseSeed + $g;
     $state = Engine::newGame($cards, range(101, 100 + $players), $seed);
     if ($vmax !== null) { $state['villain']['max'] = $vmax; }
+    if (isset($opt['compdiv'])) { $state['compromisedDivisor'] = (int)$opt['compdiv']; }
     $botRng = Rng::seedState($seed ^ 0x5EED);
     $steps = 0;
     while ($state['phase'] !== 'finished') {
@@ -48,6 +49,11 @@ for ($g = 0; $g < $games; $g++) {
     }
     $r = $state['result'];
     $agg[$r['cause']]++;
+    if (!empty($r['traitorWin'])) { $agg['traitorWins']++; }
+    if ($r['cause'] === 'round8') {
+        $compSeats = array_column(array_filter($r['mandates'], fn($m) => $m['compromised']), 'seat');
+        if (array_intersect($r['winners'], $compSeats)) { $agg['traitorPointWins']++; }
+    }
     $agg['endRoundSum'] += $state['round'];
     $agg['villainSum'] += $state['villain']['track'];
     $agg['fallsSum'] += $state['stats']['falls'];
@@ -69,11 +75,13 @@ if ($csvPath) {
 }
 
 printf(
-    "players=%d vmax=%s bots=%s games=%d | villainmax %4.1f%% | mean end round %.2f | mean villain %.1f | mean falls %.1f | villain from threat/fallout/fallen/penalty %.1f/%.1f/%.1f/%.1f | mean winning score %.1f\n",
+    "players=%d vmax=%s bots=%s games=%d | villainmax %4.1f%% (traitor wins %.1f%%) | mean end round %.2f | mean villain %.1f | mean falls %.1f | villain threat/fallout/fallen/penalty/spin/tipoff %.1f/%.1f/%.1f/%.1f/%.1f/%.1f | mean winning score %.1f\n",
     $players, $vmax ?? Engine::VILLAIN_MAX[$players], implode(',', $botKinds), $games,
-    100 * $agg['villainmax'] / $games, $agg['endRoundSum'] / $games, $agg['villainSum'] / $games,
+    100 * $agg['villainmax'] / $games, 100 * ($agg['traitorWins'] + $agg['traitorPointWins']) / $games,
+    $agg['endRoundSum'] / $games, $agg['villainSum'] / $games,
     $agg['fallsSum'] / $games,
     $agg['src']['threat'] / $games, $agg['src']['fallout'] / $games,
     $agg['src']['fallen'] / $games, $agg['src']['penalty'] / $games,
+    ($agg['src']['spin'] ?? 0) / $games, ($agg['src']['tipoff'] ?? 0) / $games,
     $agg['winScoreSum'] / $games
 );

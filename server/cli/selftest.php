@@ -20,16 +20,30 @@ echo "card data: " . implode('; ', $report) . "\n";
 
 function invariants(array $state, CardSet $cards): void
 {
+    $spinTotal = count($state['spinDeck']) + count($state['spinDiscard']);
+    $mandates = [];
     foreach ($state['players'] as $p) {
         foreach ($p['tokens'] as $cur => $n) {
             if ($n < 0) { throw new RuntimeException("negative $cur for seat {$p['seat']}"); }
         }
         if ($p['trust'] < 0) { throw new RuntimeException("negative trust seat {$p['seat']}"); } // R4
         if ($p['execsLeft'] < 0 || $p['execsLeft'] > $p['execsTotal']) { throw new RuntimeException('exec count broken'); }
+        $spinTotal += count($p['spinHand']);
+        if ($p['mandate'] === null) { throw new RuntimeException('player without mandate'); }
+        if (isset($mandates[$p['mandate']])) { throw new RuntimeException('duplicate mandate dealt'); }
+        $mandates[$p['mandate']] = true;
+    }
+    if ($spinTotal !== count($cards->spin)) {
+        throw new RuntimeException("spin cards not conserved: $spinTotal");
+    }
+    if (count($state['fallen']) > Engine::MAX_FALLEN_IN_PLAY) { throw new RuntimeException('too many fallen in play'); }
+    if (count($state['fallen']) + count($state['fallenDiscard']) > count($cards->fallen)) {
+        throw new RuntimeException('fallen cards not conserved');
     }
     if ($state['villain']['track'] > $state['villain']['max']) { throw new RuntimeException('villain over max'); }
     if (count($state['crisisRow']) > $state['playerCount'] + 2) { throw new RuntimeException('row too long'); }
     foreach ($state['crisisRow'] as $slot) { $cards->crisis($slot['cardId']); }
+    foreach ($state['board']['rebuiltLocations'] as $rl) { $cards->crisis($rl['cardId']); }
 }
 
 $causes = ['round8' => 0, 'villainmax' => 0];

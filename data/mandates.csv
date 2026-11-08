@@ -6,5 +6,5 @@ MD04,Deep Background,0,"Conspiracy,Media",+3 Trust per Conspiracy or Media crisi
 MD05,Beltway Fixers,0,"Political,Conspiracy",+3 Trust per Political or Conspiracy crisis you resolve,3
 MD06,Market Makers,0,"Financial,Public Safety",+3 Trust per Financial or Public Safety crisis you resolve,3
 MD07,City Builders,0,REBUILT,+4 Trust per rebuilt location you own,4
-MD08,Compromised,1,VILLAIN,"You are a traitor. Once per round when you place an exec you may secretly raise the Villain track 1. If it maxes, you win. Otherwise +1 Trust per Villain track step at game end.",1
-MD09,Compromised,1,VILLAIN,"You are a traitor. Once per round when you place an exec you may secretly raise the Villain track 1. If it maxes, you win. Otherwise +1 Trust per Villain track step at game end.",1
+MD08,Compromised,1,VILLAIN,"You are a traitor. Once per round when you place an exec you may secretly raise the Villain track 1. If it maxes, you win. Otherwise +1 Trust per 3 full Villain track steps at game end.",1
+MD09,Compromised,1,VILLAIN,"You are a traitor. Once per round when you place an exec you may secretly raise the Villain track 1. If it maxes, you win. Otherwise +1 Trust per 3 full Villain track steps at game end.",1

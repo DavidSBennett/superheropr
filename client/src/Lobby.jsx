@@ -76,7 +76,7 @@ export default function Lobby({ onOpenGame }) {
             Create game
           </Button>
           <p className="mt-2 text-xs text-[var(--ink-soft)]">
-            Phase 2 slice is tuned and tested for 2 players.
+            Full rules, 2-5 players.
           </p>
         </div>
         <div className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-4">

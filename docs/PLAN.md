@@ -1,8 +1,9 @@
 # Superhero PR - Phase 1 Implementation Plan
 
-Status: rulings R1-R15 decided 2026-11-07 (see docs/RULINGS.md; R3 and R6
-changed from the recommendation and are reflected below). Still pending: The
-Historians source (section 11) and approval of data/spin.csv.
+Status: Phases 1-3 delivered 2026-11-07. Rulings R1-R21 in docs/RULINGS.md
+(R20/R21 applied under the balance mandate, veto-able). Still pending: The
+Historians source (section 11) for the auth/chat/widget swap and the sync
+cadence check. Remaining: Phase 4 (full balance report, polish).
 
 ## 1. Repository layout
 
