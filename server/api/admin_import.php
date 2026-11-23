@@ -33,10 +33,17 @@ $enforceCounts = empty($_POST['allow_counts']);
 
 $fileBytes = []; // name => raw csv bytes
 if (!empty($_FILES['xlsx']['tmp_name'])) {
-    if (!is_file(__DIR__ . '/../../vendor/autoload.php')) {
+    // The shared Composer libraries live in public_html/vendor on GreenGeeks,
+    // some levels above this install (which may sit in public_html/superheropr
+    // or deeper, e.g. public_html/games/superheropr). Walk up until found.
+    $autoload = null;
+    for ($d = dirname(__DIR__); $d !== dirname($d); $d = dirname($d)) {
+        if (is_file($d . '/vendor/autoload.php')) { $autoload = $d . '/vendor/autoload.php'; break; }
+    }
+    if ($autoload === null) {
         json_out(['ok' => false, 'errors' => ['PhpSpreadsheet not installed on this host; upload the CSVs instead']], 422);
     }
-    require_once __DIR__ . '/../../vendor/autoload.php';
+    require_once $autoload;
     $wb = \PhpOffice\PhpSpreadsheet\IOFactory::load($_FILES['xlsx']['tmp_name']);
     foreach ($wb->getSheetNames() as $sheet) {
         if (!isset(Validate::HEADERS[$sheet])) { continue; }

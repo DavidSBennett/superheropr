@@ -5,10 +5,10 @@ two-click deploy from GitHub; B is the plain file-manager upload. Both end
 with the same layout:
 
 ```
-public_html/superheropr/           index.html + assets/   (the built client)
-public_html/superheropr/api/       PHP endpoints
-public_html/superheropr/engine/    rules engine (blocked from the web by .htaccess)
-public_html/superheropr/data/      the 5 card CSVs (for re-imports)
+public_html/games/superheropr/           index.html + assets/   (the built client)
+public_html/games/superheropr/api/       PHP endpoints
+public_html/games/superheropr/engine/    rules engine (blocked from the web by .htaccess)
+public_html/games/superheropr/data/      the 5 card CSVs (for re-imports)
 ```
 
 ## 0. One-time: database (both paths)
@@ -40,10 +40,10 @@ One-time setup:
    - Repository Name: superheropr
 2. Open the repo's Manage > Pull or Deploy tab and click
    "Deploy HEAD Commit". The .cpanel.yml at the repo root copies the built
-   client, api/, engine/ and the CSVs into public_html/superheropr/.
+   client, api/, engine/ and the CSVs into public_html/games/superheropr/.
    (To install somewhere else, edit the DEPLOY line in .cpanel.yml.)
 3. Create the config by hand once (it is deliberately not in the repo):
-   cPanel > File Manager > public_html/superheropr/api/ > copy
+   cPanel > File Manager > public_html/games/superheropr/api/ > copy
    config.sample.php to config.local.php, edit it with the database name,
    user and password from step 0, and put your username in 'admins'.
 
@@ -57,9 +57,9 @@ Every later delivery:
 ## B. Alternative: manual upload
 
 1. Upload the dist zip from dist-zips/ and extract it into
-   public_html/superheropr/.
-2. Upload server/api/ to public_html/superheropr/api/ and server/engine/ to
-   public_html/superheropr/engine/ (engine must sit next to api, not inside
+   public_html/games/superheropr/.
+2. Upload server/api/ to public_html/games/superheropr/api/ and server/engine/ to
+   public_html/games/superheropr/engine/ (engine must sit next to api, not inside
    it). Include server/engine/.htaccess.
 3. Create api/config.local.php as in A step 3.
 
